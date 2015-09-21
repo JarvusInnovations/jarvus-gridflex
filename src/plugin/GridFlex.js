@@ -19,12 +19,27 @@ Ext.define('Jarvus.plugin.GridFlex', {
 
     updateGrid: function(grid, oldGrid) {
         if (oldGrid) {
-            oldGrid.un('resize', 'onGridResize', this);
+            oldGrid.un({
+                scope: this,
+                resize: 'onGridResize',
+                painted: 'onGridPainted'
+            });
         }
 
         if (grid) {
-            grid.on('resize', 'onGridResize', this);
+            grid.on({
+                scope: this,
+                resize: 'onGridResize',
+                painted: 'onGridPainted'
+            });
         }
+
+        console.time('init->painted');
+    },
+
+    onGridPainted: function(gridEl) {
+        console.timeEnd('init->painted');
+        console.time('painted->resize');
     },
 
     onGridResize: function(gridEl, resizeInfo) {
@@ -34,6 +49,7 @@ Ext.define('Jarvus.plugin.GridFlex', {
             columns = this.getGrid().getColumns(),
             columnsLen, columnIndex, column, columnFlex;
 
+        console.timeEnd('painted->resize');
         for (columnIndex = 0, columnsLen = columns.length; columnIndex < columnsLen; columnIndex++) {
             column = columns[columnIndex];
             columnFlex = column.getFlex();
