@@ -30,7 +30,7 @@ Ext.define('Jarvus.plugin.GridFlex', {
     },
 
     onGridResize: function(gridEl, resizeInfo) {
-        this.flexColumnsToWidth(resizeInfo.width);
+        this.flexColumnsToWidth(resizeInfo.contentWidth);
     },
 
     flexColumnsToWidth: function(availableWidth) {
@@ -54,7 +54,7 @@ Ext.define('Jarvus.plugin.GridFlex', {
 
         for (columnIndex = 0, columnsLen = flexColumns.length; columnIndex < columnsLen; columnIndex++) {
             column = flexColumns[columnIndex];
-            column.setWidth(availableWidth * (column.getFlex() / flexTotal));
+            column.setWidth(Math.floor(availableWidth * (column.getFlex() / flexTotal)));
         }
 
         grid.container.show();
