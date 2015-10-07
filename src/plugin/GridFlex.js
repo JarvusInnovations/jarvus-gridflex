@@ -10,7 +10,8 @@ Ext.define('Jarvus.plugin.GridFlex', {
     alias: 'plugin.gridflex',
 
     config: {
-        grid: null
+        grid: null,
+        reserveScrollbar: true
     },
 
     init: function(grid) {
@@ -34,12 +35,15 @@ Ext.define('Jarvus.plugin.GridFlex', {
     },
 
     flexColumnsToWidth: function(availableWidth) {
-        var flexColumns = [],
+        var me = this,
+            flexColumns = [],
             flexTotal = 0,
-            grid = this.getGrid(),
+            grid = me.getGrid(),
+            gridScroller = grid.getScrollable(),
             columns = grid.getColumns(),
             columnsLen, columnIndex, column, columnFlex;
 
+        // examine all columns
         for (columnIndex = 0, columnsLen = columns.length; columnIndex < columnsLen; columnIndex++) {
             column = columns[columnIndex];
             columnFlex = column.getFlex();
@@ -52,6 +56,12 @@ Ext.define('Jarvus.plugin.GridFlex', {
             }
         }
 
+        // reserve space for vertical scrollbar
+        if (me.getReserveScrollbar() && gridScroller && gridScroller.getY()) {
+            availableWidth -= Ext.getScrollbarSize().width;
+        }
+
+        // set proportional width of remaining space on all flex columns
         for (columnIndex = 0, columnsLen = flexColumns.length; columnIndex < columnsLen; columnIndex++) {
             column = flexColumns[columnIndex];
             column.setWidth(Math.floor(availableWidth * (column.getFlex() / flexTotal)));
