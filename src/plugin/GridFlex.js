@@ -48,6 +48,10 @@ Ext.define('Jarvus.plugin.GridFlex', {
             column = columns[columnIndex];
             columnFlex = column.getFlex();
 
+            if (column.getHidden()) {
+                continue;
+            }
+
             if (columnFlex) {
                 flexColumns.push(column);
                 flexTotal += columnFlex;
